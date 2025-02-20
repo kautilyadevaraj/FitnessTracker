@@ -1,4 +1,5 @@
 import Image from "next/image";
+import SignIn from "@/components/sign-in";
 
 export default function Home() {
   return (
@@ -47,6 +48,7 @@ export default function Home() {
           >
             Read our docs
           </a>
+          <SignIn />
         </div>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">

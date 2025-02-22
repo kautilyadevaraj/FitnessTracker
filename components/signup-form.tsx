@@ -12,13 +12,14 @@ import { signIn } from "next-auth/react";
 import { SiGithub, SiGoogle, SiLinkedin, SiDiscord } from "react-icons/si";
 import { useRouter } from "next/navigation";
 
-// Define form validation schema
+// Define form validation schema (without confirm password)
 const FormSchema = z.object({
+  username: z.string().min(1, "Username is required").max(100),
   email: z.string().min(1, "Email is required").email("Invalid email"),
   password: z.string().min(8, "Password must have at least 8 characters"),
 });
 
-export function LoginForm({
+export function SignUpForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
@@ -29,36 +30,51 @@ export function LoginForm({
   } = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
-
-  const router = useRouter();
+    
+    const router = useRouter();
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-    console.log(values)
-    const signInData = await signIn('credentials', {
-      email: values.email,
-      password: values.password,
-      callbackUrl: "/"
+    const response = await fetch("/api/user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: values.username,
+        email: values.email,
+        password: values.password,
+      }),
     });
-
-    if (signInData?.error) {
-      console.log(signInData.error);
-    }
-    else {
-      await fetch("/api/auth/session");
-      router.push("/");
-    }
+      
+      if (response.ok) {
+          router.push('/');
+      } 
+      else {
+          console.error('Registration failed!');
+      }
   };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
+          <CardTitle className="text-xl">Create an Account!</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-6">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="grid gap-6">
+                {/* Username Field */}
+                <div className="grid gap-2">
+                  <Label htmlFor="username">Username</Label>
+                  <Input id="username" type="text" {...register("username")} />
+                  {errors.username && (
+                    <p className="text-red-500 text-sm">
+                      {errors.username.message}
+                    </p>
+                  )}
+                </div>
+
                 {/* Email Field */}
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
@@ -77,15 +93,7 @@ export function LoginForm({
 
                 {/* Password Field */}
                 <div className="grid gap-2">
-                  <div className="flex items-center">
-                    <Label htmlFor="password">Password</Label>
-                    <a
-                      href="#"
-                      className="ml-auto text-sm underline-offset-4 hover:underline"
-                    >
-                      Forgot your password?
-                    </a>
-                  </div>
+                  <Label htmlFor="password">Password</Label>
                   <Input
                     id="password"
                     type="password"
@@ -99,7 +107,7 @@ export function LoginForm({
                 </div>
 
                 <Button type="submit" className="w-full">
-                  Login
+                  Sign Up
                 </Button>
               </div>
             </form>
@@ -107,7 +115,7 @@ export function LoginForm({
             {/* OAuth Sign-In Options */}
             <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
               <span className="relative z-10 bg-background px-2 text-muted-foreground">
-                Or continue with
+                Or sign up with
               </span>
             </div>
             <div className="flex gap-4">
@@ -141,9 +149,9 @@ export function LoginForm({
               </Button>
             </div>
             <div className="text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <a href="/sign-up" className="underline underline-offset-4">
-                Sign up
+              Already have an account?{" "}
+              <a href="#" className="underline underline-offset-4">
+                Sign in
               </a>
             </div>
           </div>

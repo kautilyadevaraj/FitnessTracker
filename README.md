@@ -1,36 +1,134 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI-Powered Personalized Fitness & Diet Planner  
 
-## Getting Started
+This project is a **Next.js** application that integrates **Supabase, Prisma ORM, and NextAuth** to provide **authentication, user management, fitness tracking, and AI-powered diet planning**.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## **Tech Stack**
+- **Frontend**: Next.js (App Router), Tailwind CSS, ShadCN UI  
+- **Backend**: Supabase (PostgreSQL), Prisma ORM  
+- **Authentication**: NextAuth.js (Google, GitHub, LinkedIn, Discord, Credentials)  
+- **State Management**: React Hook Form + Zod for validation  
+
+---
+
+## **Setup Instructions**
+
+### **Clone the Repository**
+```sh
+git clone https://github.com/yourusername/project-repo.git
+cd project-repo
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### **Install Dependencies**
+```sh
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### **Set Up Environment Variables**
+Create a `.env.local` file in the root directory and add the following:
+```ini
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# OAuth Provider Credentials (Get from Google, GitHub, LinkedIn, Discord)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+LINKEDIN_CLIENT_ID=your-linkedin-client-id
+LINKEDIN_CLIENT_SECRET=your-linkedin-client-secret
+DISCORD_CLIENT_ID=your-discord-client-id
+DISCORD_CLIENT_SECRET=your-discord-client-secret
+```
 
-## Learn More
+Create a `.env` file in the root directory and add the following:
+```ini
+DATABASE_URL="postgresql://postgres:{password}@db.laeifhkkahjbafs.supabase.co:5432/postgres"
+```
+> **Note:** Keep these credentials **private** and do not commit them to GitHub.
 
-To learn more about Next.js, take a look at the following resources:
+### **Set Up Supabase & Prisma**
+Ensure **Supabase PostgreSQL** is correctly set up and linked to **Prisma ORM**.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### **Run Prisma Migrations**
+```sh
+npx prisma generate
+npx prisma migrate dev --name init
+```
+#### **Open Prisma Studio (Optional, for testing)**
+```sh
+npx prisma studio
+```
+This opens a **database GUI** to manage users, accounts, and sessions.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## **Running the Project**
+### **Start the Development Server**
+```sh
+npm run dev
+```
+Your app will be available at **`http://localhost:3000`**.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## **Features to Test**
+### **✅ Authentication**
+- Sign up/login using:
+  - Google, GitHub, LinkedIn, Discord
+  - Email + Password (Credentials Provider)
+- Check if the same email across different providers links to a single user.
+
+### **✅ User Profile & Data Storage**
+- User data should be stored in Supabase PostgreSQL.
+- CRUD operations should work without errors.
+
+### **✅ Security**
+- Ensure **Row-Level Security (RLS)** prevents unauthorized access.
+- **Test session persistence** across page reloads.
+
+---
+
+## **🛠️ Debugging & Logs**
+If you face issues, check:
+- **Server Logs:**  
+  ```sh
+  npm run dev
+  ```
+- **API Logs:**  
+  Visit `/api/auth/session` to inspect authentication.
+- **Database Logs:**  
+  ```sh
+  npx prisma studio
+  ```
+
+---
+
+## **🤝 Contribution Guidelines**
+1. **Fork the repository & clone it locally**.
+2. **Create a new branch**:  
+   ```sh
+   git checkout -b feature-branch
+   ```
+3. **Commit changes with meaningful messages**:  
+   ```sh
+   git commit -m "Added XYZ feature"
+   ```
+4. **Push to GitHub and create a Pull Request (PR)**.
+
+---
+
+## **📄 License**
+This project is open-source and available under the **MIT License**.
+
+---
+
+## **🎯 Next Steps**
+- Implement AI-powered fitness and diet plan suggestions.
+- Optimize database queries for performance.
+- Add more test cases for edge scenarios.
+
+---
+
+**Happy coding!** 😃  
+For any questions, reach out to the team!
+

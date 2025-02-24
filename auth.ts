@@ -37,7 +37,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             email: credentials?.email,
           },
         });
-        if (!existingUser) return null;
+        if (!existingUser || !existingUser.password) return null;
 
         if (existingUser.password) {
           const passwordMatch = await compare(
@@ -89,7 +89,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         ...session,
         user: {
           ...session.user,
-          username: token.username,
+          username: token.username as string,
         },
       };
     },

@@ -57,9 +57,30 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  physicalFitness PhysicalFitness?
  
   @@map("users")
 }
+
+model PhysicalFitness {
+  id                String    @id @default(uuid())
+  userId            String    @unique
+  weight            Float     // in kilograms
+  height            Float     // in centimeters
+  bodyFatPercentage Float?    // optional, as a percentage
+  benchPressMax     Float?    // optional, max bench press weight in kilograms
+  squatMax          Float?    // optional, max squat weight in kilograms
+  deadliftMax       Float?    // optional, max deadlift weight in kilograms
+  vo2Max            Float?    // optional, measure of cardiovascular endurance (mL/kg/min)
+  flexibility       Float?    // optional, e.g., sit-and-reach score in centimeters
+  trainingFrequency Int?      // optional, number of training sessions per week
+  trainingExperience String?  // optional, e.g., "beginner", "intermediate", "advanced"
+  workoutGoal       String?   // optional, e.g., "strength", "endurance", "hypertrophy", "fat loss"
+  lastUpdated       DateTime  @default(now()) @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+}
+
 
 model VerificationToken {
   identifier String

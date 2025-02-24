@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { signIn } from "next-auth/react";
 import { SiGithub, SiGoogle, SiLinkedin, SiDiscord } from "react-icons/si";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 // Define form validation schema
 const FormSchema = z.object({
@@ -41,12 +42,17 @@ export function LoginForm({
     });
 
     if (signInData?.error) {
-      console.log(signInData.error);
+      toast.error("Login Failed", {
+        description: "Invalid credentials. Please try again."
+      });
     }
     else {
-      await fetch("/api/auth/session");
       router.push("/");
+      toast.success("Login Successful!", {
+        description: "You have logged in successfully.",
+      });
     }
+  
   };
 
   return (

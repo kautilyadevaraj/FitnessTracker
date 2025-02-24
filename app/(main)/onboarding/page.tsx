@@ -14,12 +14,12 @@ export default function OnboardingPage() {
   return (
     <div>
       <Sheet>
-        <SheetTrigger>
+        <SheetTrigger asChild>
           <Button>Open</Button>
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Are you absolutely sure?</SheetTitle>
+            <SheetTitle></SheetTitle>
             <MultiStepOnboardingForm></MultiStepOnboardingForm>
           </SheetHeader>
         </SheetContent>

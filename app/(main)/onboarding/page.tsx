@@ -15,7 +15,6 @@ export default function OnboardingPage() {
     <div>
       <Sheet>
         <SheetTrigger asChild>
-        <SheetTrigger asChild>
           <Button>Open</Button>
         </SheetTrigger>
         <SheetContent>

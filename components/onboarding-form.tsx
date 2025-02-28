@@ -1,263 +1,367 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
+import { useState } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { ArrowLeft, ArrowRight, Check } from "lucide-react"
 
-// Define validation schema
-const OnboardingSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  age: z.number().min(0, "Please enter a valid age"),
-  gender: z.string().optional(),
+import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Slider } from "@/components/ui/slider"
+import { Textarea } from "@/components/ui/textarea"
 
-  // Step 2: Physical Metrics
-  height: z.number().min(0, "Please enter your height in cm"),
-  weight: z.number().min(0, "Please enter your weight in kg"),
-  bodyFatPercentage: z.number().optional(),
-  vo2Max: z.number().optional(),
-  flexibility: z.number().optional(),
+const personalInfoSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+  email: z.string().email({ message: "Please enter a valid email address." }),
+  age: z.string().refine((val) => !isNaN(Number.parseInt(val)) && Number.parseInt(val) > 0, {
+    message: "Please enter a valid age.",
+  }),
+})
 
-  // Step 3: Workout Experience
-  trainingFrequency: z.number().optional(), // Number of workouts per week
-  trainingExperience: z.string().optional(), // e.g., beginner, intermediate, advanced
-  workoutGoal: z.string().optional(), // e.g., strength, endurance, hypertrophy
+const fitnessGoalsSchema = z.object({
+  primaryGoal: z.enum(["weight-loss", "muscle-gain", "endurance", "flexibility", "general-fitness"], {
+    required_error: "Please select a primary fitness goal.",
+  }),
+  fitnessLevel: z.enum(["beginner", "intermediate", "advanced"], {
+    required_error: "Please select your current fitness level.",
+  }),
+  workoutsPerWeek: z.string().min(1, { message: "Please select how many workouts per week." }),
+})
 
-  // Step 4: Workout Preferences
-  trainingPreference: z.enum(["gym", "home"]),
-  benchPressMax: z.number().optional(),
-  squatMax: z.number().optional(),
-  deadliftMax: z.number().optional(),
-});
+const preferencesSchema = z.object({
+  workoutDuration: z.string().min(1, { message: "Please select your preferred workout duration." }),
+  workoutLocation: z.enum(["home", "gym", "outdoors", "mixed"], {
+    required_error: "Please select where you plan to work out.",
+  }),
+  additionalInfo: z.string().optional(),
+})
 
-type OnboardingData = z.infer<typeof OnboardingSchema>;
+type FormStep = "personal" | "goals" | "preferences" | "complete"
 
-export default function MultiStepOnboardingForm() {
-  const [currentStep, setCurrentStep] = useState(0);
-  const steps = [
-    "Basic Info",
-    "Physical Metrics",
-    "Training Details",
-    "Workout Preferences",
-    "Review",
-  ];
+export default function OnboardingForm() {
+  const [step, setStep] = useState<FormStep>("personal")
 
-  const methods = useForm<OnboardingData>({
-    resolver: zodResolver(OnboardingSchema),
+  // Personal Info Form
+  const personalForm = useForm<z.infer<typeof personalInfoSchema>>({
+    resolver: zodResolver(personalInfoSchema),
     defaultValues: {
       name: "",
-      age: 0,
-      gender: "",
-      height: 0,
-      weight: 0,
-      bodyFatPercentage: undefined,
-      vo2Max: undefined,
-      flexibility: undefined,
-      trainingFrequency: undefined,
-      trainingExperience: "",
-      workoutGoal: "",
-      trainingPreference: "gym",
-      benchPressMax: undefined,
-      squatMax: undefined,
-      deadliftMax: undefined,
+      email: "",
+      age: "",
     },
-  });
+  })
 
-  const nextStep = () => setCurrentStep((prev) => prev + 1);
-  const prevStep = () => setCurrentStep((prev) => prev - 1);
-  const onSubmit = async (data: OnboardingData) => {
-    console.log("Final Data:", data);
-  };
+  // Fitness Goals Form
+  const goalsForm = useForm<z.infer<typeof fitnessGoalsSchema>>({
+    resolver: zodResolver(fitnessGoalsSchema),
+    defaultValues: {
+      primaryGoal: undefined,
+      fitnessLevel: undefined,
+      workoutsPerWeek: "3",
+    },
+  })
 
-  const renderStep = () => {
-    switch (currentStep) {
-      case 0:
-        return (
-          <div>
-            <h2 className="text-lg font-bold">Basic Info</h2>
-            <div className="grid gap-2">
-              <Label>Name</Label>
-              <Input {...methods.register("name")} />
-              {methods.formState.errors.name && (
-                <p className="text-red-500 text-sm">
-                  {methods.formState.errors.name.message}
-                </p>
-              )}
-            </div>
-            <div className="grid gap-2">
-              <Label>Age</Label>
-              <Input
-                type="number"
-                {...methods.register("age", { valueAsNumber: true })}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label>Gender</Label>
-              <Input {...methods.register("gender")} />
-            </div>
-          </div>
-        );
+  // Preferences Form
+  const preferencesForm = useForm<z.infer<typeof preferencesSchema>>({
+    resolver: zodResolver(preferencesSchema),
+    defaultValues: {
+      workoutDuration: "30",
+      workoutLocation: undefined,
+      additionalInfo: "",
+    },
+  })
 
-      case 1:
-        return (
-          <div>
-            <h2 className="text-lg font-bold">Physical Metrics</h2>
-            <div className="grid gap-2">
-              <Label>Height (cm)</Label>
-              <Input
-                type="number"
-                {...methods.register("height", { valueAsNumber: true })}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label>Weight (kg)</Label>
-              <Input
-                type="number"
-                {...methods.register("weight", { valueAsNumber: true })}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label>Body Fat Percentage (%)</Label>
-              <Input
-                type="number"
-                {...methods.register("bodyFatPercentage", {
-                  valueAsNumber: true,
-                })}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label>VO2 Max (mL/kg/min)</Label>
-              <Input
-                type="number"
-                {...methods.register("vo2Max", { valueAsNumber: true })}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label>Flexibility (cm)</Label>
-              <Input
-                type="number"
-                {...methods.register("flexibility", { valueAsNumber: true })}
-              />
-            </div>
-          </div>
-        );
+  function onPersonalSubmit(data: z.infer<typeof personalInfoSchema>) {
+    setStep("goals")
+  }
 
-      case 2:
-        return (
-          <div>
-            <h2 className="text-lg font-bold">Training Details</h2>
-            <div className="grid gap-2">
-              <Label>Training Frequency (per week)</Label>
-              <Input
-                type="number"
-                {...methods.register("trainingFrequency", {
-                  valueAsNumber: true,
-                })}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label>Training Experience</Label>
-              <Input
-                {...methods.register("trainingExperience")}
-                placeholder="Beginner, Intermediate, Advanced"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label>Workout Goal</Label>
-              <Input
-                {...methods.register("workoutGoal")}
-                placeholder="Strength, Endurance, Hypertrophy"
-              />
-            </div>
-          </div>
-        );
+  function onGoalsSubmit(data: z.infer<typeof fitnessGoalsSchema>) {
+    setStep("preferences")
+  }
 
-      case 3:
-        return (
-          <div>
-            <h2 className="text-lg font-bold">Workout Preferences</h2>
-            <div className="grid gap-2">
-              <Label>Training Preference</Label>
-              <select {...methods.register("trainingPreference")}>
-                <option value="gym">Gym Workout</option>
-                <option value="home">Home Workout</option>
-              </select>
-            </div>
-            {methods.watch("trainingPreference") === "gym" && (
-              <>
-                <div className="grid gap-2">
-                  <Label>Bench Press Max (kg)</Label>
-                  <Input
-                    type="number"
-                    {...methods.register("benchPressMax", {
-                      valueAsNumber: true,
-                    })}
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label>Squat Max (kg)</Label>
-                  <Input
-                    type="number"
-                    {...methods.register("squatMax", { valueAsNumber: true })}
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label>Deadlift Max (kg)</Label>
-                  <Input
-                    type="number"
-                    {...methods.register("deadliftMax", {
-                      valueAsNumber: true,
-                    })}
-                  />
-                </div>
-              </>
-            )}
-          </div>
-        );
-
-      case 4:
-        return (
-          <div>
-            <h2 className="text-lg font-bold">Review & Submit</h2>
-            <pre className="bg-gray-100 p-4 rounded">
-              {JSON.stringify(methods.getValues(), null, 2)}
-            </pre>
-          </div>
-        );
-
-      default:
-        return null;
-    }
-  };
+  function onPreferencesSubmit(data: z.infer<typeof preferencesSchema>) {
+    setStep("complete")
+    // Here you would typically submit all form data to your backend
+    console.log({
+      ...personalForm.getValues(),
+      ...goalsForm.getValues(),
+      ...preferencesForm.getValues(),
+    })
+  }
 
   return (
-    <FormProvider {...methods}>
-      
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
-            {renderStep()}
-            <div className="flex justify-between mt-4">
-              {currentStep > 0 && (
-                <Button type="button" onClick={prevStep}>
-                  Back
-                </Button>
-              )}
-              {currentStep < steps.length - 1 && (
-                <Button type="button" onClick={nextStep}>
-                  Next
-                </Button>
-              )}
-              {currentStep === steps.length - 1 && (
-                <Button type="submit">Submit</Button>
+    <div className="space-y-4 p-2">
+      {/* Progress Indicator */}
+      <div className="flex justify-between mb-6">
+        {["personal", "goals", "preferences", "complete"].map((s, i) => (
+          <div key={i} className="flex flex-col items-center">
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-full border-2 ${
+                step === s
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : step === "complete" ||
+                      (s === "goals" && step === "preferences") ||
+                      (s === "goals" && step === "complete") ||
+                      (s === "preferences" && step === "complete")
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-muted-foreground/20 text-muted-foreground"
+              }`}
+            >
+              {step === "complete" ||
+              (s === "goals" && step === "preferences") ||
+              (s === "goals" && step === "complete") ||
+              (s === "preferences" && step === "complete") ? (
+                <Check className="h-4 w-4" />
+              ) : (
+                i + 1
               )}
             </div>
+            <span className="mt-1 text-xs text-muted-foreground capitalize">{s}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Personal Info Step */}
+      {step === "personal" && (
+        <Form {...personalForm}>
+          <form onSubmit={personalForm.handleSubmit(onPersonalSubmit)} className="space-y-4">
+            <FormField
+              control={personalForm.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={personalForm.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your email" type="email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={personalForm.control}
+              name="age"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Age</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your age" type="number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full">
+              Next <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
           </form>
-        
-    </FormProvider>
-  );
+        </Form>
+      )}
+
+      {/* Fitness Goals Step */}
+      {step === "goals" && (
+        <Form {...goalsForm}>
+          <form onSubmit={goalsForm.handleSubmit(onGoalsSubmit)} className="space-y-4">
+            <FormField
+              control={goalsForm.control}
+              name="primaryGoal"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Primary Fitness Goal</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your primary goal" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="weight-loss">Weight Loss</SelectItem>
+                      <SelectItem value="muscle-gain">Muscle Gain</SelectItem>
+                      <SelectItem value="endurance">Endurance</SelectItem>
+                      <SelectItem value="flexibility">Flexibility</SelectItem>
+                      <SelectItem value="general-fitness">General Fitness</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={goalsForm.control}
+              name="fitnessLevel"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Current Fitness Level</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-col space-y-1"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="beginner" />
+                        </FormControl>
+                        <FormLabel className="font-normal">Beginner</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="intermediate" />
+                        </FormControl>
+                        <FormLabel className="font-normal">Intermediate</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="advanced" />
+                        </FormControl>
+                        <FormLabel className="font-normal">Advanced</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={goalsForm.control}
+              name="workoutsPerWeek"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Workouts Per Week: {field.value}</FormLabel>
+                  <FormControl>
+                    <Slider
+                      min={1}
+                      max={7}
+                      step={1}
+                      defaultValue={[Number.parseInt(field.value)]}
+                      onValueChange={(vals) => field.onChange(vals[0].toString())}
+                      className="py-4"
+                    />
+                  </FormControl>
+                  <FormDescription>How many days per week can you commit to working out?</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex gap-2">
+              <Button variant="outline" type="button" onClick={() => setStep("personal")}>
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back
+              </Button>
+              <Button type="submit" className="flex-1">
+                Next <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </form>
+        </Form>
+      )}
+
+      {/* Preferences Step */}
+      {step === "preferences" && (
+        <Form {...preferencesForm}>
+          <form onSubmit={preferencesForm.handleSubmit(onPreferencesSubmit)} className="space-y-4">
+            <FormField
+              control={preferencesForm.control}
+              name="workoutDuration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Preferred Workout Duration: {field.value} minutes</FormLabel>
+                  <FormControl>
+                    <Slider
+                      min={15}
+                      max={90}
+                      step={15}
+                      defaultValue={[Number.parseInt(field.value)]}
+                      onValueChange={(vals) => field.onChange(vals[0].toString())}
+                      className="py-4"
+                    />
+                  </FormControl>
+                  <FormDescription>How long do you prefer your workouts to be?</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={preferencesForm.control}
+              name="workoutLocation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Workout Location</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select where you plan to work out" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="home">Home</SelectItem>
+                      <SelectItem value="gym">Gym</SelectItem>
+                      <SelectItem value="outdoors">Outdoors</SelectItem>
+                      <SelectItem value="mixed">Mixed (Combination)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={preferencesForm.control}
+              name="additionalInfo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Additional Information</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Any injuries, limitations, or specific preferences we should know about?"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex gap-2">
+              <Button variant="outline" type="button" onClick={() => setStep("goals")}>
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back
+              </Button>
+              <Button type="submit" className="flex-1">
+                Complete <Check className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </form>
+        </Form>
+      )}
+
+      {/* Complete Step */}
+      {step === "complete" && (
+        <div className="flex flex-col items-center justify-center space-y-4 py-6 text-center">
+          <div className="rounded-full bg-primary/10 p-3">
+            <Check className="h-6 w-6 text-primary" />
+          </div>
+          <h3 className="text-xl font-bold">You're all set!</h3>
+          <p className="text-muted-foreground">
+            Thank you for completing the onboarding process. Your personalized fitness plan is being created.
+          </p>
+          <Button className="w-full">View Your Dashboard</Button>
+        </div>
+      )}
+    </div>
+  )
 }
+

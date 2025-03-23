@@ -8,6 +8,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { Dumbbell, Timer, Flame, HeartPulse, StretchHorizontal, Play } from "lucide-react";
+import { useRouter } from 'next/navigation';
+
 
 export default function WorkoutsPage() {
   const allWorkouts = [
@@ -31,7 +33,7 @@ export default function WorkoutsPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground p-6">
-      <h1 className="text-4xl font-bold mb-8 text-center">🔥 Your AI Workouts</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center">Workouts</h1>
 
       <div className="flex justify-center mb-8">
         <Input placeholder="Search workouts..." className="w-full max-w-md bg-muted text-foreground" />
@@ -81,20 +83,12 @@ function WorkoutCard({
 }: {
   workout: { name: string; duration: string; calories: string; icon: JSX.Element };
 }) {
-  const [progress, setProgress] = useState(0);
+  const router = useRouter(); // Initialize the router
 
   function handleStart() {
-    setProgress(0);
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        return prev + 10;
-      });
-    }, 300);
+    router.push(`/${workout.name.toLowerCase().replace(/\s+/g, '-')}`);
   }
+
 
   return (
     <Card className="hover:shadow-xl transition bg-muted border-border text-foreground">
@@ -119,7 +113,6 @@ function WorkoutCard({
             {workout.calories}
           </div>
         </div>
-        <Progress value={progress} className="h-2 bg-border" />
       </CardContent>
     </Card>
   );

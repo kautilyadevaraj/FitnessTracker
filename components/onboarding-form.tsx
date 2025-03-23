@@ -173,7 +173,7 @@ export default function OnboardingForm() {
           return (
             <div key={s} className="flex flex-col items-center">
               <div
-                className={`flex h-8 w-8 items-center justify-center rounded-full border-2 ${
+                className={`flex pb-0.5 h-8 w-8 items-center justify-center rounded-full border-2 ${
                   // You might want to style the active step differently.
                   isCompleted || s === step
                     ? "border-primary bg-primary text-primary-foreground"

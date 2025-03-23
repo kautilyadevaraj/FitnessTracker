@@ -1,3 +1,4 @@
+"use client";
 import { AppSidebar } from "@/components/app-sidebar"
 import {
   Breadcrumb,
@@ -13,8 +14,29 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { Button } from "@/components/ui/button"
 
 export default function Page() {
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("/api/workout-generator", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify("Which model are you?"),
+      });
+
+      if (response.ok) {
+        console.log("IT WORKED!!")
+        // Optionally, navigate to another page (for example, a dashboard)
+      } else {
+        console.error("IT DIDNT WORK!");
+      }
+    } catch (error) {
+      console.error("Error submitting prompt:", error);
+    }
+  }
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -40,7 +62,7 @@ export default function Page() {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="aspect-video rounded-xl bg-muted/50" />
+            <div className="aspect-video rounded-xl bg-muted/50" ><Button onClick={handleSubmit}>Get Data</Button></div>
             <div className="aspect-video rounded-xl bg-muted/50" />
             <div className="aspect-video rounded-xl bg-muted/50" />
           </div>

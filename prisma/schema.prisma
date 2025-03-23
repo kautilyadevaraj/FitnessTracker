@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,23 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// run ```prisma migrate dev``` whenever you change the schema
-
 model Account {
   id                String  @id @default(cuid())
   userId            String  @map("user_id")
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -56,8 +47,8 @@ model User {
   emailVerified   DateTime?        @map("email_verified")
   image           String?
   accounts        Account[]
-  sessions        Session[]
   physicalFitness PhysicalFitness?
+  sessions        Session[]
 
   @@map("users")
 }
@@ -65,27 +56,21 @@ model User {
 model PhysicalFitness {
   id              String   @id @default(uuid())
   userEmail       String   @unique
-  user            User     @relation(fields: [userEmail], references: [email], onDelete: Cascade)
-
-  // Physical Metrics
+  height          Float
+  weight          Float
+  fitnessLevel    String
+  primaryGoal     String
+  lastUpdated     DateTime @default(now()) @updatedAt
   age             Int
   gender          String
-  height          Float  // in centimeters
-  weight          Float  // in kilograms
-
-  // Fitness Background & Goals/Preferences
-  primaryGoal     String
-  fitnessLevel    String
-  workoutsPerWeek Int
+  additionalInfo  String?
   workoutDuration Int
   workoutLocation String
-  additionalInfo  String?
-
-  lastUpdated     DateTime @default(now()) @updatedAt
+  workoutsPerWeek Int
+  user            User     @relation(fields: [userEmail], references: [email], onDelete: Cascade)
 
   @@map("physical_fitness")
 }
-
 
 model VerificationToken {
   identifier String
@@ -94,4 +79,20 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model ExerciseDetails {
+  name          String  @id(map: "ExcerciseDetails_pkey")
+  equipment     String?
+  category      String?
+  targetedAreas String?
+  videoURL      String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model test {
+  id         BigInt   @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  images     Bytes?
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { Dumbbell, Timer, Flame, HeartPulse, StretchHorizontal, Play } from "lucide-react";
 import { useRouter } from 'next/navigation';
-
+import { JSX } from "react";
 
 export default function WorkoutsPage() {
   const allWorkouts = [

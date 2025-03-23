@@ -59,6 +59,7 @@ export async function POST() {
     });
     // Build a comma-separated list of exercise names for the prompt
     const exerciseList = exercises.map((ex) => ex.name).join(", ");
+    const exerciseLinks = exercises.map((ex) => ex.videoURL).join(",");
     // Construct the prompt for Gemini
     const prompt = `Generate a personalized workout plan for a user with the following details:
 - Age: ${validatedFitness.age}
@@ -72,6 +73,7 @@ export async function POST() {
 - Workout Setting: ${validatedFitness.workoutLocation}
 
 Available exercises for ${validatedFitness.workoutLocation} workouts: ${exerciseList}.
+The Links to all the exercises in the same order are: ${exerciseLinks}
 
 Return the workout plan as a structured JSON object with the following format:
 {
@@ -84,7 +86,8 @@ Return the workout plan as a structured JSON object with the following format:
           "equipment": "<Equipment Needed>",
           "estimatedTime": "<Estimated Time>",
           "targetedArea": "<Targeted Body Area>",
-          "benefits": "<>"
+          "benefits": "<5 to 7 words>",
+          "videoURL": "<URL>"
       },
       "2": { ... },
       ...
@@ -96,8 +99,6 @@ Return the workout plan as a structured JSON object with the following format:
       model: google("gemini-2.0-flash-lite-preview-02-05"),
       prompt: prompt,
     });
-
-    console.log(await result);
 
     return NextResponse.json(
       { message: "Workout plan generated successfully", plan: result},

@@ -24,8 +24,9 @@ const fitnessSchema = z.object({
 });
 
 // The route handler for generating workout plans
-export async function POST() {
+export async function POST(req: Request) {
   try {
+    const input = await req.json();
     // Fetch the session to get the user's email
     const session = await auth();
     if (!session || !session.user || !session.user.email) {
@@ -74,6 +75,9 @@ export async function POST() {
 
 Available exercises for ${validatedFitness.workoutLocation} workouts: ${exerciseList}.
 The Links to all the exercises in the same order are: ${exerciseLinks}
+Give a good 2-3 word name to the workout.
+
+This is the prompt entered by the user - ${input.preferences}
 
 Return the workout plan as a structured JSON object with the following format:
 {
@@ -85,8 +89,9 @@ Return the workout plan as a structured JSON object with the following format:
           "name": "<Exercise Name>",
           "equipment": "<Equipment Needed>",
           "estimatedTime": "<Estimated Time>",
+          "repsAndSets": "Number of Reps and Sets",
           "targetedArea": "<Targeted Body Area>",
-          "benefits": "<5 to 7 words>",
+          "benefits": "<Some benefits - 2 sentences>",
           "videoURL": "<URL>"
       },
       "2": { ... },

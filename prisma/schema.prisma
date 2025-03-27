@@ -49,7 +49,7 @@ model User {
   accounts        Account[]
   physicalFitness PhysicalFitness?
   sessions        Session[]
-
+  workoutPlans    WorkoutPlan[]
   @@map("users")
 }
 
@@ -71,6 +71,22 @@ model PhysicalFitness {
 
   @@map("physical_fitness")
 }
+
+model WorkoutPlan {
+  id                String   @id @default(uuid())
+  routineName       String
+  noOfExercises     Int
+  estimatedDuration String
+  exercises         Json
+  noOfUsers         Int
+  rating            Float
+  category          String
+  userEmail         String   
+  user              User     @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+
+  @@map("workout_plans")
+}
+
 
 model VerificationToken {
   identifier String

@@ -4,7 +4,6 @@ import * as React from "react"
 import {
   AudioWaveform,
   BookOpen,
-  Bot,
   Command,
   Frame,
   GalleryVerticalEnd,
@@ -12,6 +11,8 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
+  Dumbbell,
+  Salad
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -72,28 +73,28 @@ const data = {
       ],
     },
     {
-      title: "Models",
-      url: "#",
-      icon: Bot,
+      title: "Workouts",
+      url: "/workouts",
+      icon: Dumbbell,
       items: [
         {
-          title: "Genesis",
+          title: "Generate Workout",
           url: "#",
         },
         {
-          title: "Explorer",
+          title: "Explore Workouts",
           url: "#",
         },
         {
-          title: "Quantum",
+          title: "Share Your Workout",
           url: "#",
         },
       ],
     },
     {
-      title: "Documentation",
+      title: "Diet Plans",
       url: "#",
-      icon: BookOpen,
+      icon: Salad,
       items: [
         {
           title: "Introduction",
@@ -113,29 +114,7 @@ const data = {
         },
       ],
     },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
+    
   ],
   projects: [
     {

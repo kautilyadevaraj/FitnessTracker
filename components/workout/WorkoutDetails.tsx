@@ -1,6 +1,5 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -11,7 +10,6 @@ import {
   Info,
   Repeat,
 } from "lucide-react";
-import Loader from "@/components/Loader";
 import {
   Accordion,
   AccordionContent,
@@ -21,57 +19,40 @@ import {
 import { Badge } from "@/components/ui/badge";
 import YouTubeEmbed from "@/components/YoutubeEmbed";
 
-// Define a type for a single exercise in the workout plan
 type Exercise = {
   name: string;
   equipment: string;
-  estimatedTime: string;
+  category: string;
   targetedArea: string;
-  benefits: string;
   videoURL: string;
-  repsAndSets: string;
+  estimatedTime: string;
+  repsAndSets?: string;
 };
 
-// Define the structure of the workout plan
-type WorkoutPlan = {
+export interface WorkoutPlan {
+  id: string;
   routineName: string;
   noOfExercises: number;
   estimatedDuration: string;
-  exercises: { [key: string]: Exercise };
-};
+  exercises: any; // JsonValue type (needs parsing)
+  noOfUsers: number;
+  rating: number;
+  category: string;
+  userEmail: string;
+}
 
-export default function WorkoutPlanDisplay() {
-  const [plan, setPlan] = useState<WorkoutPlan | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface WorkoutDetailsProps {
+  workout: WorkoutPlan;
+}
+
+export default function WorkoutDetails({ workout }: WorkoutDetailsProps) {
   const [completedExercises, setCompletedExercises] = useState<string[]>([]);
 
-  useEffect(() => {
-    const fetchWorkoutPlan = async () => {
-      try {
-        const res = await fetch("/api/workout-generator", { method: "POST" });
-        if (!res.ok) {
-          throw new Error("Failed to fetch workout plan");
-        }
-        const data = await res.json();
-        // Expecting data.plan.text to contain the workout plan wrapped in code fences
-        const rawText: string = data.plan.text; // e.g. "```json\n{...}\n```"
-        const jsonText = rawText
-          .replace(/^```json\s*/, "")
-          .replace(/\s*```$/, "");
-        const parsedPlan: WorkoutPlan = JSON.parse(jsonText);
-        console.log(parsedPlan)
-        setPlan(parsedPlan);
-      } catch (err: any) {
-        console.error("Error fetching workout plan:", err);
-        setError(err.message || "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWorkoutPlan();
-  }, []);
+  // ✅ Parse exercises from JSON
+  const parsedExercises: Record<string, Exercise> =
+    typeof workout.exercises === "string"
+      ? JSON.parse(workout.exercises)
+      : workout.exercises;
 
   const handleMarkAsDone = (exerciseName: string) => {
     if (!completedExercises.includes(exerciseName)) {
@@ -79,30 +60,21 @@ export default function WorkoutPlanDisplay() {
     }
   };
 
-  if (loading)
-    return (
-      <div className="h-full w-full flex items-center justify-center">
-        <Loader />
-      </div>
-    );
-  if (error) return <p className="text-center text-red-500">Error: {error}</p>;
-  if (!plan) return <p className="text-center">No workout plan available.</p>;
-
-  const progress = (completedExercises.length / plan.noOfExercises) * 100;
+  const progress = (completedExercises.length / workout.noOfExercises) * 100;
 
   return (
     <div className="min-h-screen pb-10 bg-background text-foreground">
-      {/* Sticky header with progress */}
+      {/* Header with Progress */}
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b py-4 px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-xl md:text-2xl font-bold mb-2 text-center">
-            {plan.routineName}
+            {workout.routineName}
           </h1>
           <div className="space-y-2">
             <Progress value={progress} className="h-3 bg-muted" />
             <p className="text-sm text-muted-foreground text-center">
-              {completedExercises.length} of {plan.noOfExercises} exercises done
-              ({Math.round(progress)}%)
+              {completedExercises.length} of {workout.noOfExercises} exercises
+              done ({Math.round(progress)}%)
             </p>
           </div>
         </div>
@@ -111,12 +83,12 @@ export default function WorkoutPlanDisplay() {
       <div className="max-w-4xl mx-auto px-4 md:px-6 pt-6 space-y-8">
         <p className="text-muted-foreground text-center">
           Complete all exercises to finish your workout. Estimated duration:{" "}
-          {plan.estimatedDuration}
+          {workout.estimatedDuration}
         </p>
 
         <Accordion type="multiple" className="w-full">
-          {Object.keys(plan.exercises).map((key) => {
-            const exercise = plan.exercises[key];
+          {Object.keys(parsedExercises).map((key) => {
+            const exercise = parsedExercises[key];
             const isDone = completedExercises.includes(exercise.name);
             const targetAreas = exercise.targetedArea
               .split(",")
@@ -167,7 +139,9 @@ export default function WorkoutPlanDisplay() {
                           <p className="text-xs text-muted-foreground">
                             Sets & Reps
                           </p>
-                          <p className="font-medium">{exercise.repsAndSets}</p>
+                          <p className="font-medium">
+                            {exercise.repsAndSets || "N/A"}
+                          </p>
                         </div>
                       </div>
                       <div className="flex items-center h-fit gap-2 bg-muted/50 p-3 rounded-lg">
@@ -179,38 +153,16 @@ export default function WorkoutPlanDisplay() {
                           <p className="font-medium">{exercise.equipment}</p>
                         </div>
                       </div>
-                      <div className="flex items-center col-span-1 sm:col-span-2 lg:col-span-4 h-fit w-fit gap-2 bg-muted/50 p-3 rounded-lg">
-                        <Flame className="h-6 w-6 text-red-500 flex-shrink-0" />
-                        <div>
-                          <p className="text-xs text-muted-foreground">
-                            Benefits
-                          </p>
-                          <p className="font-medium">{exercise.benefits}</p>
-                        </div>
-                      </div>
                     </div>
 
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-2">
-                        Targeted Areas:
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {targetAreas.map((area, index) => (
-                          <Badge key={index} className="font-normal">
-                            {area}
-                          </Badge>
-                        ))}
+                    {exercise.videoURL && (
+                      <div className="mt-6">
+                        <p className="text-sm font-medium mb-2">
+                          Exercise Tutorial:
+                        </p>
+                        <YouTubeEmbed videoUrl={exercise.videoURL} />
                       </div>
-
-                      {exercise.videoURL && (
-                        <div className="mt-6">
-                          <p className="text-sm font-medium mb-2">
-                            Exercise Tutorial:
-                          </p>
-                          <YouTubeEmbed videoUrl={exercise.videoURL} />
-                        </div>
-                      )}
-                    </div>
+                    )}
 
                     <div className="flex justify-end">
                       <Button

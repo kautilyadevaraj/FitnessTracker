@@ -79,11 +79,11 @@ const data = {
       items: [
         {
           title: "Generate Workout",
-          url: "#",
+          url: "/workouts/generate-workout",
         },
         {
           title: "Explore Workouts",
-          url: "#",
+          url: "/workouts",
         },
         {
           title: "Share Your Workout",

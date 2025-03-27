@@ -1,53 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Textarea } from "../ui/textarea";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { ArrowRightIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import Loader from "@/components/Loader";
-import {
-  CheckCircle,
-  Dumbbell,
-  Timer,
-  Flame,
-  Info,
-  Repeat,
-} from "lucide-react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
-import YouTubeEmbed from "@/components/YoutubeEmbed";
-
-// Define a type for a single exercise
-type Exercise = {
-  name: string;
-  equipment: string;
-  estimatedTime: string;
-  targetedArea: string;
-  benefits: string;
-  videoURL: string;
-  repsAndSets: string;
-};
-
-// Define the structure of the workout plan
-type WorkoutPlan = {
-  routineName: string;
-  noOfExercises: number;
-  estimatedDuration: string;
-  exercises: { [key: string]: Exercise };
-};
+import WorkoutPlan, {
+  type WorkoutPlan as WorkoutPlanType,
+} from "./workout-plan";
+import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function Chat() {
   const [input, setInput] = useState("");
-  const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null);
+  const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlanType | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [completedExercises, setCompletedExercises] = useState<string[]>([]);
 
   const fetchWorkout = async () => {
     if (!input.trim()) {
@@ -56,6 +25,7 @@ export default function Chat() {
     }
 
     setLoading(true);
+    setError(null); // Clear any previous errors
     try {
       const response = await fetch("/api/workout-generator", {
         method: "POST",
@@ -66,11 +36,13 @@ export default function Chat() {
       if (!response.ok) throw new Error("Failed to fetch workout plan");
 
       const data = await response.json();
+      if (!data.plan || !data.plan.text)
+        throw new Error("Invalid response from API");
       const rawText = data.plan.text;
       const jsonText = rawText
         .replace(/^```json\s*/, "")
         .replace(/\s*```$/, "");
-      const parsedPlan: WorkoutPlan = JSON.parse(jsonText);
+      const parsedPlan: WorkoutPlanType = JSON.parse(jsonText);
 
       setWorkoutPlan(parsedPlan);
       toast.success("Workout plan generated!");
@@ -83,185 +55,149 @@ export default function Chat() {
     }
   };
 
-  const handleMarkAsDone = (exerciseName: string) => {
-    if (!completedExercises.includes(exerciseName)) {
-      setCompletedExercises([...completedExercises, exerciseName]);
+  const handleUpdateWorkout = (updatedPlan: WorkoutPlanType) => {
+    setWorkoutPlan(updatedPlan);
+  };
+
+  const handleSaveWorkout = async () => {
+    if (!workoutPlan) {
+      toast.error("No workout plan to save.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/workouts/save-workout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(workoutPlan),
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to save workout plan.");
+      }
+
+      toast.success("Workout saved successfully!");
+    } catch (error) {
+      console.error("Error saving workout:", error);
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
-  const progress =
-    workoutPlan && workoutPlan.noOfExercises
-      ? (completedExercises.length / workoutPlan.noOfExercises) * 100
-      : 0;
+
+  const examplePrompts = [
+    {
+      title: "Full-Body Strength",
+      subtitle: "Build muscle with a balanced workout.",
+      href: "#",
+    },
+    {
+      title: "Home Workout Plan",
+      subtitle: "No equipment? No problem!",
+      href: "#",
+    },
+    {
+      title: "Fat-Burning Routine",
+      subtitle: "High-intensity exercises to shed fat.",
+      href: "#",
+    },
+    {
+      title: "Beginner Friendly",
+      subtitle: "Start your fitness journey with ease.",
+      href: "#",
+    },
+  ];
+
 
   return (
-    <div className="relative h-full w-full flex flex-col justify-end gap-4 m-2">
-      {/* Loading State */}
-      {loading && (
-        <div className="h-full w-full flex justify-center items-center">
-          <Loader />
-        </div>
-      )}
-
-      {/* Error State */}
-      {error && <p className="text-center text-red-500 mt-4">Error: {error}</p>}
-
-      {/* Display AI-Generated Workout */}
-      {workoutPlan && (
-        <div className="h-full text-foreground mt-6">
-          {/* Sticky header with progress */}
-          <div className="border-b py-4 px-4 md:px-6">
-            <div className="max-w-4xl mx-auto">
-              <h1 className="text-xl md:text-2xl font-bold mb-2 text-center">
-                {workoutPlan.routineName}
-              </h1>
-              
+    <div className="flex flex-col h-fit w-full overflow-hidden">
+      {/* Main content area - scrollable */}
+      <div className="flex-1 relative">
+        <ScrollArea className="h-[calc(80vh)]">
+          {/* Loading State */}
+          {loading ? (
+            <div className="h-[calc(100vh-80px)] w-full flex justify-center items-center">
+              <Loader />
             </div>
-          </div>
+          ) : (
+            <>
+              {/* Display AI-Generated Workout */}
+              {workoutPlan ? (
+                <WorkoutPlan
+                  workoutPlan={workoutPlan}
+                  onSave={handleSaveWorkout}
+                  onUpdate={handleUpdateWorkout}
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center p-4 min-h-[80vh]">
+                  <div className="text-center mb-8 max-w-2xl">
+                    <h1 className="text-2xl font-bold mb-2">
+                      AI-Powered Workout Generator
+                    </h1>
+                    <p className="text-muted-foreground">
+                      Get a personalized workout plan tailored to your fitness
+                      goals!
+                    </p>
+                  </div>
 
-          <div className="max-w-4xl mx-auto px-4 md:px-6 pt-6 space-y-8">
-            
-
-            <Accordion type="multiple" className="w-full">
-              {Object.keys(workoutPlan.exercises).map((key) => {
-                const exercise = workoutPlan.exercises[key];
-                const isDone = completedExercises.includes(exercise.name);
-                const targetAreas = exercise.targetedArea
-                  .split(",")
-                  .map((area) => area.trim());
-
-                return (
-                  <AccordionItem
-                    key={exercise.name}
-                    value={exercise.name}
-                    className={`mb-4 border rounded-lg ${
-                      isDone
-                        ? "border-green-500 bg-green-500/10"
-                        : "border-border bg-background"
-                    }`}
-                  >
-                    <AccordionTrigger className="px-4 py-3 hover:no-underline">
-                      <div className="flex items-center justify-between w-full pr-4">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-primary rounded-full">
-                            <Dumbbell className="h-5 w-5" />
-                          </div>
-                          <span className="font-medium text-base md:text-lg truncate">
-                            {exercise.name}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          {isDone && (
-                            <CheckCircle className="text-green-500 h-5 w-5 flex-shrink-0" />
-                          )}
-                        </div>
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="px-4 pb-4">
-                      <div className="space-y-6">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-2">
-                          <div className="flex items-center h-fit gap-2 bg-muted/50 p-3 rounded-lg">
-                            <Timer className="h-6 w-6 text-primary flex-shrink-0" />
-                            <div>
-                              <p className="text-xs text-muted-foreground">
-                                Duration
-                              </p>
-                              <p className="font-medium">
-                                {exercise.estimatedTime}
-                              </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
+                    {examplePrompts.map((prompt, index) => (
+                      <Card
+                        key={index}
+                        className="cursor-pointer hover:bg-muted/50 transition-colors"
+                        onClick={() =>
+                          setInput(`${prompt.title} ${prompt.subtitle}`)
+                        }
+                      >
+                        <CardContent className="p-4">
+                          <div className="text-sm">
+                            <div className="font-medium">{prompt.title}</div>
+                            <div className="text-muted-foreground">
+                              {prompt.subtitle}
                             </div>
                           </div>
-                          <div className="flex items-center h-fit gap-2 bg-muted/50 p-3 rounded-lg">
-                            <Repeat className="h-6 w-6 text-violet-500 flex-shrink-0" />
-                            <div>
-                              <p className="text-xs text-muted-foreground">
-                                Sets & Reps
-                              </p>
-                              <p className="font-medium">
-                                {exercise.repsAndSets}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center h-fit gap-2 bg-muted/50 p-3 rounded-lg">
-                            <Info className="h-6 w-6 text-blue-500 flex-shrink-0" />
-                            <div>
-                              <p className="text-xs text-muted-foreground">
-                                Equipment
-                              </p>
-                              <p className="font-medium">
-                                {exercise.equipment}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center col-span-1 sm:col-span-2 lg:col-span-4 h-fit w-fit gap-2 bg-muted/50 p-3 rounded-lg">
-                            <Flame className="h-6 w-6 text-red-500 flex-shrink-0" />
-                            <div>
-                              <p className="text-xs text-muted-foreground">
-                                Benefits
-                              </p>
-                              <p className="font-medium">{exercise.benefits}</p>
-                            </div>
-                          </div>
-                        </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
 
-                        <div>
-                          <p className="text-xs text-muted-foreground mb-2">
-                            Targeted Areas:
-                          </p>
-                          <div className="flex flex-wrap gap-2">
-                            {targetAreas.map((area, index) => (
-                              <Badge key={index} className="font-normal">
-                                {area}
-                              </Badge>
-                            ))}
-                          </div>
+          {/* Error State */}
+          {error && (
+            <p className="text-center text-red-500 mt-4">Error: {error}</p>
+          )}
+        </ScrollArea>
+      </div>
 
-                          {exercise.videoURL && (
-                            <div className="mt-6">
-                              <p className="text-sm font-medium mb-2">
-                                Exercise Tutorial:
-                              </p>
-                              <YouTubeEmbed videoUrl={exercise.videoURL} />
-                            </div>
-                          )}
-                        </div>
+      {/* Fixed input area at bottom */}
+      <div className="sticky bottom-0 left-0 right-0 z-10 bg-background border-t p-0.5">
+        <div className="relative">
+          <Textarea
+            placeholder="What type of workout do you want?"
+            className="min-h-[24px] max-h-[120px] overflow-y-auto resize-none rounded-b !text-base mt-1 bg-muted pb-10 dark:border-zinc-700"
+            rows={2}
+            autoFocus
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                fetchWorkout();
+              }
+            }}
+          />
 
-                        <div className="flex justify-end">
-                          <Button
-                            size="sm"
-                            variant={isDone ? "outline" : "default"}
-                            onClick={() => handleMarkAsDone(exercise.name)}
-                            disabled={isDone}
-                            className={
-                              isDone ? "border-green-500 text-green-500" : ""
-                            }
-                          >
-                            {isDone ? "Completed" : "Mark as Done"}
-                          </Button>
-                        </div>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                );
-              })}
-            </Accordion>
+          {/* Submit Button */}
+          <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-center">
+            <Button onClick={fetchWorkout} disabled={loading}>
+              {loading ? <Loader /> : <ArrowRightIcon />}
+            </Button>
           </div>
         </div>
-      )}
-      <Textarea
-        placeholder="What type of workout do you want?"
-        className="min-h-[24px] max-h-[calc(75dvh)] overflow-hidden resize-none rounded !text-base bg-muted pb-10 dark:border-zinc-700"
-        rows={2}
-        autoFocus
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
-
-      {/* Submit Button */}
-      <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-center">
-        <Button onClick={fetchWorkout} disabled={loading}>
-          {loading ? <Loader /> : <ArrowRightIcon />}
-        </Button>
       </div>
     </div>
   );

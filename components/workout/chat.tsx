@@ -63,7 +63,7 @@ export default function Chat() {
         body: JSON.stringify({ preferences: input }),
       });
 
-      if (!response.ok) throw new Error("Failed to fetch workout plan");
+       if (!response.ok) throw new Error("Failed to fetch workout plan");
 
       const data = await response.json();
       const rawText = data.plan.text;

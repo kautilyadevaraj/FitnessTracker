@@ -10,6 +10,11 @@ const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_API_KEY,
 });
 
+export async function GET() {
+  return NextResponse.json({ message: "API is working" }, { status: 200 });
+}
+
+
 // Define a schema to validate the user's fitness data from the PhysicalFitness table
 const fitnessSchema = z.object({
   height: z.number(),

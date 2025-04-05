@@ -89,6 +89,7 @@ model WorkoutPlan {
   @@map("workout_plans")
 }
 
+
 model Dish {
   name          String  @id @map("name")
   calories      Float?  @map("calories")

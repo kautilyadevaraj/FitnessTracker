@@ -16,6 +16,13 @@ import { Clock, Dumbbell } from "lucide-react";
 import PlaceHolderImage from "@/public/placeholder.png";
 import FeaturedWorkoutsSkeleton from "../skeleton/featured-workouts-skeleton";
 
+import Image1 from "@/public/1.png";
+import Image2 from "@/public/2.png";
+import Image3 from "@/public/3.png";
+import Image4 from "@/public/4.png";
+
+const images = [Image1, Image2, Image3, Image4];
+
 interface Workout {
   id: string;
   routineName: string;
@@ -69,14 +76,14 @@ export default function FeaturedWorkouts() {
       ) : (
         <Carousel className="w-full">
           <CarouselContent>
-            {workouts.map((workout) => (
+            {workouts.map((workout, index) => (
               <CarouselItem
                 key={workout.id}
                 className="md:basis-1/2 lg:basis-1/3"
               >
                 <div className="relative h-[300px] overflow-hidden rounded-xl">
                   <Image
-                    src={PlaceHolderImage}
+                    src={images[index % images.length]}
                     alt={workout.routineName}
                     fill
                     className="object-cover transition-transform hover:scale-105"
@@ -86,9 +93,9 @@ export default function FeaturedWorkouts() {
                     <Badge
                       className="mb-2 capitalize"
                       variant={
-                        workout.category === "beginner"
+                        workout.category.toLowerCase() === "beginner"
                           ? "beginner"
-                          : workout.category === "intermediate"
+                          : workout.category.toLowerCase() === "intermediate"
                           ? "intermediate"
                           : "advanced"
                       }
@@ -108,9 +115,11 @@ export default function FeaturedWorkouts() {
                         <span>{workout.noOfExercises} exercises</span>
                       </div>
                     </div>
-                    <Button size="sm" className="w-full">
-                      Start Workout
-                    </Button>
+                    <Link href={`/workouts/${workout.id}`}>
+                      <Button size="sm" className="w-full">
+                        View Workout
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </CarouselItem>

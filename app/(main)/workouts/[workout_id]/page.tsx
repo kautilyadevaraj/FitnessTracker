@@ -22,12 +22,11 @@ export default function WorkoutPage() {
     const fetchWorkout = async () => {
       try {
         const res = await fetch("/api/workouts", {
-          // ✅ Changed API route
-          method: "POST", // ✅ Changed from GET to POST
+          method: "POST", 
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ workout_id: workoutId }), // ✅ Sending ID in body
+          body: JSON.stringify({ workout_id: workoutId }), 
         });
 
         if (!res.ok) {

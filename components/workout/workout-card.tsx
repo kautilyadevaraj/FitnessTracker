@@ -7,6 +7,13 @@ import Image from "next/image";
 import { JsonValue } from "next-auth/adapters";
 import Link from "next/link";
 
+import Image1 from "@/public/1.png";
+import Image2 from "@/public/2.png";
+import Image3 from "@/public/3.png";
+import Image4 from "@/public/4.png";
+
+const images = [Image1, Image2, Image3, Image4];
+
 export interface WorkoutCardProps {
   id: string;
   routineName: string;
@@ -20,15 +27,15 @@ export interface WorkoutCardProps {
 }
 
 export default function WorkoutCard({
-  workout,
+  workout, index
 }: {
-  workout: WorkoutCardProps;
+  workout: WorkoutCardProps; index: number
 }) {
   return (
     <Card className="overflow-hidden">
       <div className="aspect-video relative bg-muted">
         <Image
-          src={PlaceHolderImage}
+          src={images[index % images.length]}
           alt={workout.routineName}
           fill
           className="object-cover transition-transform hover:scale-105"
@@ -36,9 +43,9 @@ export default function WorkoutCard({
         <Badge
           className="absolute top-2 right-2 capitalize"
           variant={
-            workout.category === "beginner"
+            workout.category.toLocaleLowerCase() === "beginner"
               ? "beginner"
-              : workout.category === "intermediate"
+              : workout.category.toLocaleLowerCase() === "intermediate"
               ? "intermediate"
               : "advanced"
           }

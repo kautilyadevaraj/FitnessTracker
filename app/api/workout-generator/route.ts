@@ -14,6 +14,12 @@ export async function GET() {
   return NextResponse.json({ message: "API is working" }, { status: 200 });
 }
 
+interface ExerciseDetail {
+  name: string;
+  equipment: string | null;
+  targetedAreas: string | null;
+  videoURL: string | null;
+}
 
 // Define a schema to validate the user's fitness data from the PhysicalFitness table
 const fitnessSchema = z.object({
@@ -54,7 +60,7 @@ export async function POST(req: Request) {
     // Validate the retrieved fitness data using zod
     const validatedFitness = fitnessSchema.parse(fitnessData);
     // Query the Exercise table for exercises that match the user's workout location
-    const exercises = await db.exerciseDetails.findMany({
+    const exercises: ExerciseDetail[] = await db.exerciseDetails.findMany({
       where: { category: validatedFitness.workoutLocation },
       select: {
         name: true,

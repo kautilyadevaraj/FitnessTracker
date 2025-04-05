@@ -28,13 +28,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: kautilya286/fitnesstracker:latest
-          provenance: true
-          sbom: true
-          annotations: true
-          build-contexts: |
-            docker.io/library/node:latest=docker-image://node:latest

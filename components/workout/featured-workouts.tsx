@@ -48,6 +48,8 @@ export default function FeaturedWorkouts() {
           throw new Error("Failed to fetch workouts");
         }
         const data = await response.json();
+        if(!data.workouts)
+          throw new Error("Invalid response from API")
         setWorkouts(data.workouts);
       } catch (error) {
         console.error(error);

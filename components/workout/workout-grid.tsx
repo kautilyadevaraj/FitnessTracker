@@ -46,8 +46,8 @@ export default function WorkoutGrid() {
 
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {workouts.map((workout) => (
-        <WorkoutCard key={workout.id} workout={workout} />
+      {workouts.map((workout, index) => (
+        <WorkoutCard key={workout.id} workout={workout} index={index}/>
       ))}
     </div>
   );

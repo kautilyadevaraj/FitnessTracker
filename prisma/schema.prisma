@@ -50,6 +50,7 @@ model User {
   physicalFitness PhysicalFitness?
   sessions        Session[]
   workoutPlans    WorkoutPlan[]
+  dietPlans       DietPlan[]
 
   @@map("users")
 }
@@ -86,6 +87,40 @@ model WorkoutPlan {
   user              User   @relation(fields: [userEmail], references: [email], onDelete: Cascade)
 
   @@map("workout_plans")
+}
+
+
+model Dish {
+  name          String  @id @map("name")
+  calories      Float?  @map("calories")
+  carbohydrates Float?  @map("carbohydrates")
+  protein       Float?  @map("protein")
+  fats          Float?  @map("fats")
+  sugar         Float?  @map("sugar")
+  fibre         String? @map("fibre")
+  sodium        Float?  @map("sodium")
+  calcium       Float?  @map("calcium")
+  iron          Float?  @map("iron")
+  vitaminC      Float?  @map("vitaminC")
+  folate        Float?  @map("folate")
+  ingredients   String? @map("ingredients")
+
+  @@map("dishes")
+}
+
+model DietPlan {
+  id             String @id @default(uuid())
+  name           String
+  description    String
+  duration       Int
+  meals          Json
+  mealsPerDay    Int
+  difficulty     String
+  rating         Float
+  userEmail      String
+  user           User   @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+
+  @@map("diet_plans")
 }
 
 model VerificationToken {

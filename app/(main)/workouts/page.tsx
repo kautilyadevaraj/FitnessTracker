@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function WorkoutsPage() {
   return (
-    <div className="container p-6 space-y-8">
+    <div className="container p-6 space-y-8 min-w-full">
       <FeaturedWorkouts/>
 
       <div className="grid gap-6 md:grid-cols-[1fr_300px]">

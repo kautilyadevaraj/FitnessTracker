@@ -74,12 +74,6 @@ export default function WorkoutPlanComponent({
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  const handleMarkAsDone = (exerciseName: string) => {
-    if (!completedExercises.includes(exerciseName)) {
-      setCompletedExercises([...completedExercises, exerciseName]);
-    }
-  };
-
   const handleEditExercise = (exercise: Exercise, key: string) => {
     setEditingExercise(exercise);
     setEditingKey(key);
@@ -284,17 +278,7 @@ export default function WorkoutPlanComponent({
                           </DialogContent>
                         </Dialog>
                       )}
-                      <Button
-                        size="sm"
-                        variant={isDone ? "outline" : "default"}
-                        onClick={() => handleMarkAsDone(exercise.name)}
-                        disabled={isDone}
-                        className={
-                          isDone ? "border-green-500 text-green-500" : ""
-                        }
-                      >
-                        {isDone ? "Completed" : "Mark as Done"}
-                      </Button>
+                      
                     </div>
                   </div>
                 </AccordionContent>

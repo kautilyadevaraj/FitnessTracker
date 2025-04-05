@@ -174,7 +174,7 @@ export default function Chat() {
       </div>
 
       {/* Fixed input area at bottom */}
-      <div className="sticky bottom-0 left-0 right-0 z-10 bg-background border-t p-0.5">
+      <div className="sticky bg-background border-t p-0.5">
         <div className="relative">
           <Textarea
             placeholder="What type of workout do you want?"

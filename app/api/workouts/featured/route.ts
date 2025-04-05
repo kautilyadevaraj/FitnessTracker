@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const workouts = await db.workoutPlan.findMany({
-      take: 3,
+      take: 5,
       orderBy: {
         noOfUsers: "desc", 
       },

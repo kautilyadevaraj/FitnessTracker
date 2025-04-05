@@ -88,13 +88,13 @@ Return the workout plan as a structured JSON object with the following format:
 {
   "routineName": "User's Custom Workout",
   "noOfExercises": <number>,
-  "estimatedDuration": "<duration in minutes>",
-  "category": "<Beginner, Intermediate or Advanced>",
+  "estimatedDuration": "<duration in minutes, eg: 30 mins(no need of seconds)>",
+  "category": "<beginner, intermediate or advanced>",
   "exercises": {
       "1": {
           "name": "<Exercise Name>",
           "equipment": "<Equipment Needed>",
-          "estimatedTime": "<Estimated Time>",
+          "estimatedTime": "<Estimated Time, eg: 3 mins(no need of seconds)>",
           "repsAndSets": "Number of Reps and Sets",
           "targetedArea": "<Targeted Body Area>",
           "benefits": "<Some benefits - 2 sentences>",

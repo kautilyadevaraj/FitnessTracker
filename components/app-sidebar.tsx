@@ -36,7 +36,7 @@ const data = {
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "Fitness Tracker",
       logo: GalleryVerticalEnd,
       plan: "Enterprise",
     },
@@ -52,26 +52,6 @@ const data = {
     },
   ],
   navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
     {
       title: "Workouts",
       url: "/workouts",
@@ -97,20 +77,12 @@ const data = {
       icon: Salad,
       items: [
         {
-          title: "Introduction",
-          url: "#",
+          title: "Generate Diet Plan",
+          url: "/diet-plans/generate-dietplan",
         },
         {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
+          title: "Explore Diet Plans",
+          url: "/diet-plans",
         },
       ],
     },

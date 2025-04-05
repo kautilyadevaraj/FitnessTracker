@@ -19,9 +19,17 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+      
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies (force install to resolve peer conflicts)
-        run: npm install --force
+        run: npm ci --force
 
       - name: Run build
         run: npm run build

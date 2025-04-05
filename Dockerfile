@@ -10,6 +10,12 @@ COPY package.json package-lock.json* ./
 # --force for React 19 peer conflicts
 RUN npm install --force
 
+# Copy Prisma schema
+COPY prisma ./prisma
+
+# Run Prisma generate here
+RUN npx prisma generate
+
 # Build the app
 FROM node:18-alpine AS builder
 WORKDIR /app

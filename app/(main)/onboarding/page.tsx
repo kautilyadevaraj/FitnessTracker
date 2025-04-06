@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import MultiStepOnboardingForm from "@/components/onboarding-form";
 import {
   AlertDialog,
@@ -6,21 +7,21 @@ import {
   AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
 export default function OnboardingPage() {
+  const [isDialogOpen, setIsDialogOpen] = useState(true);
+
   return (
-    <AlertDialog>
-      <AlertDialogTrigger>Open</AlertDialogTrigger>
+    <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle></AlertDialogTitle>
+          <AlertDialogTitle>Welcome to Onboarding!</AlertDialogTitle>
           <AlertDialogDescription>
-            
+            Please complete the steps in the form below to get started.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <MultiStepOnboardingForm/>
+        <MultiStepOnboardingForm />
       </AlertDialogContent>
     </AlertDialog>
   );

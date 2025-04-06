@@ -38,7 +38,7 @@ export function LoginForm({
     const signInData = await signIn('credentials', {
       email: values.email,
       password: values.password,
-      callbackUrl: "/"
+      callbackUrl: "/onboarding"
     });
 
     if (signInData?.error) {

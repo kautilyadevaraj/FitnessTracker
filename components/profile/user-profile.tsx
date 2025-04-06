@@ -41,7 +41,11 @@ export function UserProfile() {
     fetchProfile();
   }, []);
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return (
+    <div className=" w-full min-h-[90dvh] flex items-center justify-center">
+      <Loader />
+    </div>
+  );
   if (!user)
     return (
       <div className="text-center text-muted-foreground">No user found.</div>

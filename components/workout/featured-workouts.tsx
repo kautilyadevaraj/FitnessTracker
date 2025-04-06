@@ -13,7 +13,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Clock, Dumbbell } from "lucide-react";
-import PlaceHolderImage from "@/public/placeholder.png";
 import FeaturedWorkoutsSkeleton from "../skeleton/featured-workouts-skeleton";
 
 import Image1 from "@/public/1.png";

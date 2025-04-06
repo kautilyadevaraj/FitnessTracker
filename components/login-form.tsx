@@ -13,7 +13,6 @@ import { SiGithub, SiGoogle, SiLinkedin, SiDiscord } from "react-icons/si";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-// Define form validation schema
 const FormSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
   password: z.string().min(8, "Password must have at least 8 characters"),
@@ -38,7 +37,7 @@ export function LoginForm({
     const signInData = await signIn('credentials', {
       email: values.email,
       password: values.password,
-      callbackUrl: "/"
+      callbackUrl: "/onboarding"
     });
 
     if (signInData?.error) {
@@ -47,10 +46,10 @@ export function LoginForm({
       });
     }
     else {
-      router.push("/");
       toast.success("Login Successful!", {
         description: "You have logged in successfully.",
       });
+      router.push("/onboarding");
     }
   
   };

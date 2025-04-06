@@ -202,13 +202,12 @@ export default function FitnessTracker() {
                 </div>
               ) : (
                 <div className="w-full mx-auto w-full p-4">
-                  <Button
+                  <Button className="mb-4"
                     onClick={() => {
-                      console.log("Clicked!");
                       handleSaveDietPlan();
                     }}
                   >
-                    Save Workout
+                    Save Diet Plan
                   </Button>
                   <Card>
                     <CardHeader>

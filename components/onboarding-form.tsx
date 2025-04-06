@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 const personalInfoSchema = z.object({
   age: z
@@ -86,6 +87,7 @@ type FormStep = "personal" | "goals" | "preferences" | "complete";
 
 export default function OnboardingForm() {
   const [step, setStep] = useState<FormStep>("personal");
+  const router = useRouter();
 
   // Personal Info Form
   const personalForm = useForm<z.infer<typeof personalInfoSchema>>({
@@ -146,13 +148,16 @@ export default function OnboardingForm() {
       });
 
       if (response.ok) {
+        toast.success("Onboarding completed successfully!");
         setStep("complete");
-        // Optionally, navigate to another page (for example, a dashboard)
+        router.push("/profile");
         
       } else {
+        toast.error("Onboarding submission failed!");
         console.error("Onboarding submission failed!");
       }
     } catch (error) {
+      toast.error("An error occurred while submitting the form.");
       console.error("Error submitting onboarding data:", error);
     }
   }

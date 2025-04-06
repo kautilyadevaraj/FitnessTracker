@@ -12,7 +12,7 @@ import { Utensils, Plus, Star, Calendar } from "lucide-react";
 
 interface Meals{
   day: number;
-  meals: String[];
+  meals: string[];
 }
 
 interface DietPlansProps {
@@ -75,18 +75,23 @@ export function DietPlans({ dietPlans }: DietPlansProps) {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">
-                {(plan.meals as unknown as Meals[]).map((meal, index: number) => (
-                  <div
-                    key={index}
-                    className="bg-background/30 backdrop-blur-sm rounded-md p-3 border border-orange-500/20"
-                  >
-                    <div className="font-medium text-orange-400">
-                      Day {meal.day}
+                {(plan.meals as unknown as Meals[]).map(
+                  (meal, index: number) => (
+                    <div
+                      key={index}
+                      className="bg-background/30 backdrop-blur-sm rounded-md p-3 border border-orange-500/20"
+                    >
+                      <div className="font-medium text-orange-400">
+                        Day {meal.day}
+                      </div>
+                      <ul>
+                        {meal.meals.map((dish: String, index: number) => (
+                          <li key={index}>{dish}</li>
+                        ))}
+                      </ul>
                     </div>
-                    {meal.meals.map((dish: String, index: number) => (
-                      <li key={index}>{dish}</li>))}
-                  </div>
-                ))}
+                  )
+                )}
               </div>
 
               <div className="flex items-center mt-4 pt-2 border-t border-border/50 text-sm">

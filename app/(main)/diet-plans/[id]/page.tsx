@@ -16,6 +16,16 @@ import DietPlanPlaceholderImage from "@/public/diet-plan.png";
 import { use } from "react";
 import Loader from "@/components/Loader";
 
+import Image1 from "@/public/food_1.jpeg";
+import Image2 from "@/public/food_2.jpeg";
+import Image3 from "@/public/food_3.jpeg";
+import Image4 from "@/public/food_4.jpeg";
+import Image5 from "@/public/food_5.jpeg";
+import Image6 from "@/public/food_6.jpeg";
+import Image7 from "@/public/food_7.jpeg";
+
+const images = [Image1, Image2, Image3, Image4, Image5, Image6, Image7];
+
 interface MealNutrition {
   name: string;
   calories: number;
@@ -218,9 +228,7 @@ export default function DietPlanDetailPage({
               </Badge>
               <div className="flex items-center gap-1">
                 {renderStars(dietPlan.rating)}
-                <span className="text-sm  ml-1">
-                  {dietPlan.rating}
-                </span>
+                <span className="text-sm  ml-1">{dietPlan.rating}</span>
               </div>
             </div>
           </div>
@@ -253,9 +261,7 @@ export default function DietPlanDetailPage({
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-sm font-medium">Carbs</span>
-                  <span className="text-sm">
-                    {averageCarbs.toFixed(1)}g
-                  </span>
+                  <span className="text-sm">{averageCarbs.toFixed(1)}g</span>
                 </div>
                 <Progress
                   value={Math.min(averageCarbs * 2, 100)}
@@ -265,9 +271,7 @@ export default function DietPlanDetailPage({
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-sm font-medium">Protein</span>
-                  <span className="text-sm">
-                    {averageProtein.toFixed(1)}g
-                  </span>
+                  <span className="text-sm">{averageProtein.toFixed(1)}g</span>
                 </div>
                 <Progress
                   value={Math.min(averageProtein * 3, 100)}
@@ -277,9 +281,7 @@ export default function DietPlanDetailPage({
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-sm font-medium">Fats</span>
-                  <span className="text-sm">
-                    {averageFat.toFixed(1)}g
-                  </span>
+                  <span className="text-sm">{averageFat.toFixed(1)}g</span>
                 </div>
                 <Progress
                   value={Math.min(averageFat * 4, 100)}
@@ -390,9 +392,7 @@ export default function DietPlanDetailPage({
 
       {/* Meals for the day */}
       <div className="space-y-6">
-        <h2 className="text-xl font-semibold">
-          Day {currentDay} Meals
-        </h2>
+        <h2 className="text-xl font-semibold">Day {currentDay} Meals</h2>
 
         {dietPlan.meals
           .find((day: DietDay) => day.day === currentDay)
@@ -404,7 +404,7 @@ export default function DietPlanDetailPage({
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="relative h-[200px] md:h-full">
                   <Image
-                    src={PlaceholderImage}
+                    src={images[index % images.length]}
                     alt={meal.name}
                     fill
                     className="object-cover"
@@ -430,9 +430,7 @@ export default function DietPlanDetailPage({
                         />
                       </div>
                       <div className="space-y-1">
-                        <div className="text-xs">
-                          Carbohydrates
-                        </div>
+                        <div className="text-xs">Carbohydrates</div>
                         <div className="font-medium">
                           {meal.carbohydrates.toFixed(1)}g
                         </div>

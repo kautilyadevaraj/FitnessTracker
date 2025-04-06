@@ -79,7 +79,7 @@ Ingredients: ${dish.ingredients}
 
 {  
     'id': 'UUIDv4',  
-    'name': 'Plan Name',  
+    'name': 'Plan Name (A nice catchy name or 2 or 3 words)',  
     'description': '7-day description',  
     'duration': 7,  
     'meals': [  

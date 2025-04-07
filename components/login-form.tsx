@@ -119,28 +119,28 @@ export function LoginForm({
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => signIn("google", { callbackUrl: "/" })}
+                onClick={() => signIn("google", { callbackUrl: "/onboarding" })}
               >
                 <SiGoogle />
               </Button>
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => signIn("linkedin", { callbackUrl: "/" })}
+                onClick={() => signIn("linkedin", { callbackUrl: "/onboarding" })}
               >
                 <SiLinkedin />
               </Button>
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => signIn("discord", { callbackUrl: "/" })}
+                onClick={() => signIn("discord", { callbackUrl: "/onboarding" })}
               >
                 <SiDiscord />
               </Button>
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => signIn("github", { callbackUrl: "/" })}
+                onClick={() => signIn("github", { callbackUrl: "/onboarding" })}
               >
                 <SiGithub />
               </Button>

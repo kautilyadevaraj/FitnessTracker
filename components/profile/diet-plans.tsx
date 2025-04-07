@@ -9,6 +9,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { DietPlan, Dish } from "@prisma/client";
 import { Utensils, Plus, Star, Calendar } from "lucide-react";
+import Link from "next/link";
 
 interface Meals{
   day: number;
@@ -30,10 +31,12 @@ export function DietPlans({ dietPlans }: DietPlansProps) {
           </CardTitle>
           <CardDescription>Your created meal plans</CardDescription>
         </div>
-        <Button size="sm" className="h-8 gap-1">
-          <Plus className="h-4 w-4" />
-          <span className="hidden sm:inline">New Plan</span>
-        </Button>
+        <Link href="/diet-plans/generate-dietplan">
+          <Button size="sm" className="h-8 gap-1">
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">New Plan</span>
+          </Button>
+        </Link>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">

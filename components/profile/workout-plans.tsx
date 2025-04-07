@@ -9,6 +9,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { WorkoutPlan } from "@prisma/client";
 import { Dumbbell, Plus, Star, Users } from "lucide-react";
+import Link from "next/link";
 
 interface WorkoutPlansProps {
   workoutPlans: WorkoutPlan[];
@@ -48,10 +49,12 @@ export function WorkoutPlans({ workoutPlans }: WorkoutPlansProps) {
           </CardTitle>
           <CardDescription>Your created workout routines</CardDescription>
         </div>
-        <Button size="sm" className="h-8 gap-1">
-          <Plus className="h-4 w-4" />
-          <span className="hidden sm:inline">New Plan</span>
-        </Button>
+        <Link href="/workouts/generate-workout">
+          <Button size="sm" className="h-8 gap-1">
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">New Plan</span>
+          </Button>
+        </Link>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">

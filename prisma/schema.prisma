@@ -51,6 +51,8 @@ model User {
   sessions        Session[]
   workoutPlans    WorkoutPlan[]
   dietPlans       DietPlan[]
+  workoutCompletions WorkoutCompletion[]
+  dietPlanCompletions DietPlanCompletion[]
 
   @@map("users")
 }
@@ -85,6 +87,8 @@ model WorkoutPlan {
   userEmail         String
   category          String
   user              User   @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  calories          Int
+  workoutCompletions WorkoutCompletion[]
 
   @@map("workout_plans")
 }
@@ -119,9 +123,40 @@ model DietPlan {
   rating         Float
   userEmail      String
   user           User   @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  totalCalories  Int
+  dietplanCompletions DietPlanCompletion[]
 
   @@map("diet_plans")
 }
+
+model WorkoutCompletion {
+  id             String   @id @default(uuid())
+  userEmail      String
+  workoutPlanId  String
+  caloriesBurned Float
+  completedAt    DateTime @default(now())
+
+  user           User     @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  workoutPlan    WorkoutPlan @relation(fields: [workoutPlanId], references: [id])
+
+  @@map("workout_completions")
+  @@index([userEmail, completedAt])
+}
+
+model DietPlanCompletion {
+  id               String   @id @default(uuid())
+  userEmail        String
+  dietPlanId       String
+  caloriesConsumed Float
+  completedAt      DateTime @default(now())
+
+  user             User     @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  dietPlan         DietPlan @relation(fields: [dietPlanId], references: [id])
+
+  @@map("diet_plan_completions")
+  @@index([userEmail, completedAt])
+}
+
 
 model VerificationToken {
   identifier String

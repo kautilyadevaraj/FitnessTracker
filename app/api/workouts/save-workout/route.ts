@@ -17,12 +17,14 @@ export async function POST(req: Request) {
 
     // Parse request body
     const body = await req.json();
+    console.log("Received body : ",body);
     const {
       routineName,
       noOfExercises,
       estimatedDuration,
       exercises,
       category,
+      calories
     } = body;
 
     console.log(body);
@@ -33,7 +35,8 @@ export async function POST(req: Request) {
       !noOfExercises ||
       !estimatedDuration ||
       !exercises ||
-      !category
+      !category ||
+      !calories
     ) {
       return NextResponse.json(
         { error: "Missing required fields." },
@@ -52,6 +55,7 @@ export async function POST(req: Request) {
         rating: 0, // Default rating
         category,
         userEmail,
+        calories
       },
     });
 

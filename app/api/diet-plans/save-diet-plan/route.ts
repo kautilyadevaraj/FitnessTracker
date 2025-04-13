@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { name, description, duration, meals, mealsPerDay, difficulty, rating } =
+    const { name, description, duration, meals, mealsPerDay, difficulty, rating, totalCalories } =
       body;
 
     // Validate input
@@ -25,7 +25,8 @@ export async function POST(req: Request) {
       !meals ||
       !mealsPerDay ||
       !difficulty ||
-      !rating
+      !rating ||
+      !totalCalories
     ) {
       return NextResponse.json(
         { error: "Missing required fields." },
@@ -55,6 +56,7 @@ export async function POST(req: Request) {
         difficulty,
         rating,
         userEmail: session.user.email,
+        totalCalories
       },
     });
 

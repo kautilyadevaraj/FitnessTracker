@@ -14,6 +14,7 @@ interface Workout {
   rating: number;
   category: string;
   userEmail: string;
+  calories: number;
 }
 
 export default function WorkoutGrid() {

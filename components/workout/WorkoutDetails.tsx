@@ -39,6 +39,7 @@ export interface WorkoutPlan {
   rating: number;
   category: string;
   userEmail: string;
+  calories: number;
 }
 
 interface WorkoutDetailsProps {

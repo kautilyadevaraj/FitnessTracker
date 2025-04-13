@@ -24,6 +24,7 @@ export interface WorkoutCardProps {
   rating: number;
   category: string;
   userEmail: string;
+  calories: number;
 }
 
 export default function WorkoutCard({

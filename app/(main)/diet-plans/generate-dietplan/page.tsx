@@ -67,6 +67,7 @@ interface DietPlan {
   difficulty: string;
   rating: number;
   userEmail: string;
+  totalCalories: number;
 }
 
 export default function FitnessTracker() {

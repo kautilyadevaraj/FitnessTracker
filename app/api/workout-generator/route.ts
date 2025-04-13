@@ -95,6 +95,7 @@ Return the workout plan as a structured JSON object with the following format:
   "routineName": "User's Custom Workout",
   "noOfExercises": <number>,
   "estimatedDuration": "<duration in minutes, eg: 30 mins(no need of seconds)>",
+  "calories": <calories burned in number . ex: 1500>,
   "category": "<beginner, intermediate or advanced>",
   "exercises": {
       "1": {

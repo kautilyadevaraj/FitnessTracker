@@ -56,6 +56,7 @@ export type WorkoutPlan = {
   estimatedDuration: string;
   exercises: { [key: string]: Exercise };
   category: string;
+  calories: number;
 };
 
 interface WorkoutPlanProps {

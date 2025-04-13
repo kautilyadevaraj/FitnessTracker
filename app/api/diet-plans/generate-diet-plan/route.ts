@@ -108,7 +108,8 @@ Ingredients: ${dish.ingredients}
     ],  
     'mealsPerDay': 3,  
     'difficulty': 'Easy',  
-    'rating': 4.6  
+    'rating': 4.6,
+    'totalCalories': 14000,  
 }  
 
 Requirements:  

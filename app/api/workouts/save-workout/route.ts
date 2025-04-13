@@ -17,7 +17,6 @@ export async function POST(req: Request) {
 
     // Parse request body
     const body = await req.json();
-    console.log("Received body : ",body);
     const {
       routineName,
       noOfExercises,

@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/sidebar"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
+import { signOut } from "next-auth/react";
 
 
 export function NavUser() {
@@ -90,16 +91,14 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <Link href="/profile">
-              <DropdownMenuItem>
-                
+                <DropdownMenuItem>
                   <BadgeCheck />
                   Profile
-                
                 </DropdownMenuItem>
-                </Link>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => signOut()}>
               <LogOut />
               Log out
             </DropdownMenuItem>

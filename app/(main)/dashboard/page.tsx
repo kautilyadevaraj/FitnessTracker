@@ -8,6 +8,8 @@ import { WeightTracker } from "@/components/dashboard/weight-tracker";
 import { CalorieBalanceChart } from "@/components/dashboard/calorie-balance.chart";
 import { TopWorkoutsTable } from "@/components/dashboard/top-workouts-table";
 import { RecentActivities } from "@/components/dashboard/recent-activites";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Dashboard | Fitness Tracker",
@@ -15,6 +17,10 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
+  const session = await auth();
+    if (!session) {
+      redirect('/login');
+    }
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/80 px-4 md:px-8">
       <DashboardShell>

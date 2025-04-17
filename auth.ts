@@ -62,7 +62,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/login",
   },
   debug: true,
-  //  By default, the `id` property does not exist on `token` or `session`. See the [TypeScript](https://authjs.dev/getting-started/typescript) on how to add it.
   logger: {
     error: (error) => {
       console.error("[AUTH ERROR]", error);

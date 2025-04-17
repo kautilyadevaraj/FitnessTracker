@@ -25,7 +25,7 @@ export default function Chat() {
     }
 
     setLoading(true);
-    setError(null); // Clear any previous errors
+    setError(null);
     try {
       const response = await fetch("/api/workout-generator", {
         method: "POST",

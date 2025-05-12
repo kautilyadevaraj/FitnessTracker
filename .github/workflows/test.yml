@@ -47,3 +47,16 @@ jobs:
           NODE_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5433/fitnesstracker_test?schema=public
         run: npm test
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: jest-test-results
+          path: test-results/jest-junit.xml
+
+      - name: Publish test summary
+        if: always()
+        uses: test-summary/action@v2
+        with:
+          paths: test-results/jest-junit.xml

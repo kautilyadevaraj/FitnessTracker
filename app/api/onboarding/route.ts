@@ -2,6 +2,7 @@ import { db } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import * as z from "zod";
+import { ZodError } from "zod";
 
 const OnboardingSchema = z.object({
   age: z
@@ -108,6 +109,9 @@ export async function POST(req: Request) {
       { status: 201 }
     );
   } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json({ errors: error.errors }, { status: 400 });
+    }
     return NextResponse.json(
       { message: "Something went wrong. Please try again." },
       { status: 500 }

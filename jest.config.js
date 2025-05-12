@@ -11,4 +11,7 @@ module.exports = {
       { outputDirectory: "test-results", outputName: "jest-junit.xml" },
     ],
   ],
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/$1",
+  },
 };

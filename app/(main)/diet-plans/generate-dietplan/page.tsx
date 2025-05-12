@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Send, Star } from "lucide-react";
+import { Send, Star, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -203,26 +203,25 @@ export default function FitnessTracker() {
                 </div>
               ) : (
                 <div className="w-full mx-auto w-full p-4">
-                  <Button className="mb-4"
-                    onClick={() => {
-                      handleSaveDietPlan();
-                    }}
-                  >
-                    Save Diet Plan
-                  </Button>
                   <Card>
                     <CardHeader>
                       <div className="flex items-center justify-between flex-wrap">
                         <div className="flex flex-col gap-2">
-                          <CardTitle className="text-3xl">
+                          <CardTitle className="text-3xl flex items-center justify-between">
                             {dietPlan.name}
+                            <Button
+                              onClick={handleSaveDietPlan}
+                              variant="outline"
+                              className="flex items-center gap-2"
+                            >
+                              <Save className="h-4 w-4" />
+                              Save Diet Plan
+                            </Button>
                           </CardTitle>
-
                           <CardDescription>
                             {dietPlan.description}
                           </CardDescription>
                         </div>
-
                         <div className="flex items-center gap-2 pt-2">
                           <Badge
                             variant={

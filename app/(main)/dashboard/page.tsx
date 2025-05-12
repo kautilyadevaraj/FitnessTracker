@@ -17,10 +17,10 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  // const session = await auth();
-  //   if (!session) {
-  //     redirect('/login');
-  //   }
+  const session = await auth();
+    if (!session) {
+      redirect('/login');
+    }
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/80 px-4 md:px-8">
       <DashboardShell>

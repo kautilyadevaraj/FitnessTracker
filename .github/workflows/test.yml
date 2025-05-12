@@ -54,6 +54,12 @@ jobs:
         with:
           name: jest-test-results
           path: test-results/jest-junit.xml
+
+      - name: Publish test summary
+        if: always()
+        uses: test-summary/action@v2
+        with:
+          paths: test-results/jest-junit.xml
       
       - name: Code Coverage Report
         uses: irongut/CodeCoverageSummary@v1.3.0

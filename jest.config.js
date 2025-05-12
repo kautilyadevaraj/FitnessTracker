@@ -11,4 +11,9 @@ module.exports = {
       { outputDirectory: "test-results", outputName: "jest-junit.xml" },
     ],
   ],
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/$1",
+  },
+  collectCoverage: true,
+  coverageReporters: ["json", "lcov", "text", "cobertura"],
 };

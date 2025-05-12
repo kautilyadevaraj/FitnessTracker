@@ -42,12 +42,11 @@ jobs:
           npx prisma generate
           npx prisma db push
 
-      - name: Run tests with coverage
+      - name: Run tests
         env:
           NODE_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5433/fitnesstracker_test?schema=public
-        run: |
-          npm test -- --coverage --ci --reporters=default --reporters=jest-junit
+        run: npm test
 
       - name: Upload test results
         if: always()
@@ -68,10 +67,3 @@ jobs:
           indicators: true
           output: both
           thresholds: '60 80'
-
-      - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request'
-        with:
-          recreate: true
-          path: code-coverage-results.md

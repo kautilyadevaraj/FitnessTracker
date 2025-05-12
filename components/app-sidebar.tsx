@@ -65,10 +65,6 @@ const data = {
           title: "Explore Workouts",
           url: "/workouts",
         },
-        {
-          title: "Share Your Workout",
-          url: "#",
-        },
       ],
     },
     {

@@ -131,7 +131,7 @@ export function WeightTracker() {
           <div className="rounded-lg bg-green-50 dark:bg-green-900/20 p-3 text-center">
             <p className="text-xs text-muted-foreground mb-1">Lost</p>
             <p className="text-xl font-bold text-green-600 dark:text-green-400">
-              {weightLoss.toFixed(1)} kg ({percentageLoss}%)
+              {weightLoss.toFixed(1)} kg
             </p>
           </div>
         </div>

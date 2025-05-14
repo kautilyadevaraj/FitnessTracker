@@ -16,7 +16,7 @@ This project is a **Next.js** application that integrates **Supabase, Prisma ORM
 
 ### **Clone the Repository**
 ```sh
-git clone https://github.com/yourusername/project-repo.git
+git clone https://github.com/kautilyadevaraj/FitnessTracker
 cd project-repo
 ```
 

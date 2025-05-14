@@ -17,7 +17,7 @@ jest.mock("@/lib/prisma", () => ({
 
 jest.spyOn(console, "error").mockImplementation(() => {});
 
-describe("POST /diet-plans/save-diet-plan", () => {
+describe("POST /api/diet-plans/save-diet-plan", () => {
   const validPayload = {
     name: "Test Plan",
     description: "Test Description",

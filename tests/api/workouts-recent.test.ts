@@ -12,7 +12,7 @@ jest.mock("@/lib/prisma", () => ({
 
 jest.spyOn(console, "error").mockImplementation(() => {});
 
-describe("GET /workouts/recent", () => {
+describe("GET /api/workouts/recent", () => {
   const mockWorkouts = [
     { id: "w1", name: "Workout 1" },
     { id: "w2", name: "Workout 2" },

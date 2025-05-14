@@ -14,7 +14,7 @@ jest.mock("@/lib/prisma", () => ({
 // Mock console.error
 jest.spyOn(console, "error").mockImplementation(() => {});
 
-describe("GET /api/featured", () => {
+describe("GET /api/workouts/featured", () => {
   const mockWorkouts = [
     { id: "w1", name: "Workout 1", noOfUsers: 100 },
     { id: "w2", name: "Workout 2", noOfUsers: 90 },

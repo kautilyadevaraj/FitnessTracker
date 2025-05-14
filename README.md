@@ -72,23 +72,23 @@ Your app will be available at **`http://localhost:3000`**.
 ---
 
 ## **Features to Test**
-### **✅ Authentication**
+### **Authentication**
 - Sign up/login using:
   - Google, GitHub, LinkedIn, Discord
   - Email + Password (Credentials Provider)
 - Check if the same email across different providers links to a single user.
 
-### **✅ User Profile & Data Storage**
+### **User Profile & Data Storage**
 - User data should be stored in Supabase PostgreSQL.
 - CRUD operations should work without errors.
 
-### **✅ Security**
+### **Security**
 - Ensure **Row-Level Security (RLS)** prevents unauthorized access.
 - **Test session persistence** across page reloads.
 
 ---
 
-## **🛠️ Debugging & Logs**
+## **Debugging & Logs**
 If you face issues, check:
 - **Server Logs:**  
   ```sh
@@ -103,7 +103,7 @@ If you face issues, check:
 
 ---
 
-## **🤝 Contribution Guidelines**
+## **Contribution Guidelines**
 1. **Fork the repository & clone it locally**.
 2. **Create a new branch**:  
    ```sh
@@ -117,18 +117,18 @@ If you face issues, check:
 
 ---
 
-## **📄 License**
+## **License**
 This project is open-source and available under the **MIT License**.
 
 ---
 
-## **🎯 Next Steps**
+## **Next Steps**
 - Implement AI-powered fitness and diet plan suggestions.
 - Optimize database queries for performance.
 - Add more test cases for edge scenarios.
 
 ---
 
-**Happy coding!** 😃  
+**Happy coding!** 
 For any questions, reach out to the team!
 

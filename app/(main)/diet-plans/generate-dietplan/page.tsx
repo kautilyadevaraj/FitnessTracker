@@ -29,10 +29,10 @@ import Loader from "@/components/Loader";
 
 // Sample prompts for users to try
 const samplePrompts = [
-  "Create a 7-day vegetarian meal plan with high protein options",
-  "Design a Mediterranean diet plan for weight loss",
+  "Create a 7-day meal plan with high protein options",
+  "Design a diet plan for weight loss",
   "I need a low-carb meal plan for diabetes management",
-  "Generate a meal plan for muscle building with 2500 calories per day",
+  "Generate a meal plan for muscle building",
 ];
 
 // Type definitions for the diet plan data structure

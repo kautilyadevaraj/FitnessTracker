@@ -22,7 +22,7 @@ jest.mock("ai", () => ({
 
 jest.spyOn(console, "error").mockImplementation(() => {});
 
-describe("POST /diet-plans/generate-diet-plans", () => {
+describe("POST /api/diet-plans/generate-diet-plans", () => {
   const mockDishes = [
     {
       name: "Test Dish",

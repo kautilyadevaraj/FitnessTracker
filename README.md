@@ -7,7 +7,7 @@ This project is a **Next.js** application that integrates **Supabase, Prisma ORM
 ## **Tech Stack**
 - **Frontend**: Next.js (App Router), Tailwind CSS, ShadCN UI  
 - **Backend**: Supabase (PostgreSQL), Prisma ORM  
-- **Authentication**: NextAuth.js (Google, GitHub, LinkedIn, Discord, Credentials)  
+- **Authentication**: Auth.js (Google, GitHub, LinkedIn, Discord, Credentials)  
 - **State Management**: React Hook Form + Zod for validation  
 
 ---
